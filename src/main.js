@@ -154,3 +154,20 @@ function atualizaListaDeAlbuns() {
   listaDeAlbuns.replaceWith(criaListaDeAlbuns(organizaEmLinhasEColunas(meusAlbuns)))
 }
 
+  const listaDeAlbuns = document.getElementById("album-list")
+
+    for (let i = meusAlbuns.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+
+      [meusAlbuns[i], meusAlbuns[j]] = [meusAlbuns[j], meusAlbuns[i]];
+
+    }
+
+
+  listaDeAlbuns.replaceWith(criaListaDeAlbuns(organizaEmLinhasEColunas(meusAlbuns)))
+
+  
+
+
+
+
