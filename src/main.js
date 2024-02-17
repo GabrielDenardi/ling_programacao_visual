@@ -165,6 +165,56 @@ function atualizaListaDeAlbuns() {
 
 
   listaDeAlbuns.replaceWith(criaListaDeAlbuns(organizaEmLinhasEColunas(meusAlbuns)))
+  
+
+  document.getElementById('searchButton').addEventListener('click', function () {
+    var input = document.getElementById('searchInput').value.toLowerCase();
+    var cards = document.querySelectorAll('.card');
+
+    cards.forEach(function (card) {
+      var title = card.querySelector('.card-title').textContent.toLowerCase();
+      if (title.includes(input)) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  });
+
+  document.getElementById('musicForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+  var musicaName = document.getElementById('songName').value;
+  var artista = document.getElementById('artist').value;
+  var ano = document.getElementById('album').value;
+  var musicaLink = document.getElementById('songLink').value;
+  var foto = document.getElementById('photo').files[0];
+
+
+  var imagemUrl = URL.createObjectURL(foto);
+
+  var musicCard = document.createElement('div');
+  musicCard.classList.add('card', 'col-4');
+  musicCard.innerHTML = `
+  <img class="card-img-top"
+    src="${imagemUrl}" alt="">
+  <div class="card-body">
+    <h5 class="card-title">${musicaName}</h5>
+    <p class="card-text">${artista} - <b>${ano}<br> <a href=${musicaLink} target="blank_">Spotify</a></b></p>
+  </div>  
+  `;
+
+
+
+  var albumList = document.getElementById('album-list').querySelector('.row');
+  if (albumList.firstChild) {
+    albumList.insertBefore(musicCard, albumList.firstChild);
+  } else {
+    albumList.appendChild(musicCard);
+  }
+
+  document.getElementById('musicForm').reset();
+  
+});
 
   
 
