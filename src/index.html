@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerador de playlists</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
@@ -22,8 +22,9 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         </ul>
         <form class="d-flex" role="search">
-          <input class="form-control me-2" type="search" placeholder="Busque sua música" aria-label="Buscar música">
-          <button class="btn btn-outline-success" type="submit" id="searchButton">Buscar</button>
+          <input class="form-control me-2" type="search" placeholder="Busque sua música" aria-label="Buscar música"
+            id="searchInput">
+          <button class="btn btn-outline-success" type="button" id="searchButton">Buscar</button>
         </form>
       </div>
     </div>
@@ -33,7 +34,7 @@
     <button type="button" class="btn btn-primary" onclick="atualizaListaDeAlbuns()">Atualiza Lista de Albuns</button>
   </div>
 
-  <div class="container my-5">
+  <div class="container my-5" class="row">
     <h1>Seus Albuns</h1>
     <p class="fs-5">Todos os seus albuns estão logo abaixo:</p>
     <hr class="col-1 my-4">
@@ -45,7 +46,7 @@
             src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fimg.discogs.com%2FaQEIm1-GMCQ9RxKv4SgKk1dKkyA%3D%2Ffit-in%2F600x537%2Ffilters%3Astrip_icc()%3Aformat(jpeg)%3Amode_rgb()%3Aquality(90)%2Fdiscogs-images%2FR-1654685-1338087882-1083.jpeg.jpg&f=1&nofb=1&ipt=54753a43ad450c64cb458c52d517ddbc59549a86b4327a7790dd77b1b8a25274&ipo=images"
             alt="">
           <div class="card-body">
-            <h5 class="card-title"></script></h5>
+            <h5 class="card-title"></h5>
             <p class="card-text">System of a Down - <b>2002</b></p>
           </div>
         </div>
@@ -53,10 +54,90 @@
     </div>
   </div>
 
+  <hr>
+
+  <div class="container my-5">
+    <h2>Cadastrar Nova Playlist</h2> <br>
+    <form id="musicForm">
+      <div class="mb-3">
+        <label for="songName" class="form-label">Nome do Álbum</label>
+        <input type="text" class="form-control" id="songName" name="songName" required>
+      </div>
+      <div class="mb-3">
+        <label for="artist" class="form-label">Artista</label>
+        <input type="text" class="form-control" id="artist" name="artist" required>
+      </div>
+      <div class="mb-3">
+        <label for="album" class="form-label">Ano de Lançamento</label>
+        <input type="text" class="form-control" id="album" name="album" required>
+      </div>
+      <div class="mb-3">
+        <label for="songLink" class="form-label">Link da Playlist</label>
+        <input type="url" class="form-control" id="songLink" name="songLink" required>
+      </div>
+      <div class="mb-3">
+        <label for="photo" class="form-label">Capa do Álbum</label>
+        <input type="file" class="form-control" id="photo" name="photo" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </form>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
   <script src="main.js"></script>
+
+  <script>
+    document.getElementById('searchButton').addEventListener('click', function () {
+      var input = document.getElementById('searchInput').value.toLowerCase();
+      var cards = document.querySelectorAll('.card');
+
+      cards.forEach(function (card) {
+        var title = card.querySelector('.card-title').textContent.toLowerCase();
+        if (title.includes(input)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    document.getElementById('musicForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var musicaName = document.getElementById('songName').value;
+    var artista = document.getElementById('artist').value;
+    var ano = document.getElementById('album').value;
+    var musicaLink = document.getElementById('songLink').value;
+    var foto = document.getElementById('photo').files[0];
+
+  // Criar um objeto URL para a imagem
+  var imagemUrl = URL.createObjectURL(foto);
+
+    var musicCard = document.createElement('div');
+    musicCard.classList.add('card', 'col-4');
+    musicCard.innerHTML = `
+    <img class="card-img-top"
+      src="${imagemUrl}" alt="">
+    <div class="card-body">
+      <h5 class="card-title">${musicaName}</h5>
+      <p class="card-text">${artista} - <b>${ano}<br> <a href=${musicaLink} target="blank_">Spotify</a></b></p>
+    </div>  
+    `;
+
+    // Adicionar o cartão à lista de albuns, no início
+    var albumList = document.getElementById('album-list').querySelector('.row');
+    if (albumList.firstChild) {
+      albumList.insertBefore(musicCard, albumList.firstChild);
+    } else {
+      albumList.appendChild(musicCard);
+    }
+
+    // Limpar o formulário após o envio
+    document.getElementById('musicForm').reset();
+  });
+
+  </script>
 </body>
 
 </html>
