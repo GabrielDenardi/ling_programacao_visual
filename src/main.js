@@ -57,7 +57,6 @@ function criaListaDeAlbuns(linhas) {
 
 function atualizaListaDeAlbuns() {
   const listaDeAlbuns = document.getElementById("album-list");
-  listaDeAlbuns.innerHTML = ""; // Limpa a lista antes de atualizar
 
   listaDeAlbuns.appendChild(criaListaDeAlbuns(organizaEmLinhasEColunas(meusAlbuns)));
 }
@@ -65,11 +64,8 @@ function atualizaListaDeAlbuns() {
 document.addEventListener('click', function (event) {
   if (event.target.classList.contains('delete-btn')) {
     const index = event.target.getAttribute('data-index');
-    // Remove a música correspondente do array meusAlbuns
     meusAlbuns.splice(index, 1);
-    // Salva as músicas atualizadas no localStorage
     localStorage.setItem('meusAlbuns', JSON.stringify(meusAlbuns));
-    // Atualiza a lista de álbuns na página
     atualizaListaDeAlbuns();
   }
 });
@@ -77,7 +73,6 @@ document.addEventListener('click', function (event) {
 
 document.getElementById('musicForm').addEventListener('submit', function (event) {
   event.preventDefault();
-  // Obter os valores dos campos do formulário
   var musicaName = document.getElementById('songName').value;
   var artista = document.getElementById('artist').value;
   var ano = document.getElementById('album').value;
@@ -86,9 +81,8 @@ document.getElementById('musicForm').addEventListener('submit', function (event)
   
   var reader = new FileReader();
   reader.onload = function(event) {
-    var imagem_base64 = event.target.result.split(',')[1]; // Remove o cabeçalho 'data:image/jpeg;base64,'
+    var imagem_base64 = event.target.result.split(',')[1]; 
     
-    // Criar um novo objeto de música
     const novaMusica = {
       "nome_do_album": musicaName,
       "nome_da_banda": artista,
@@ -97,28 +91,20 @@ document.getElementById('musicForm').addEventListener('submit', function (event)
       "Link": musicaLink
     };
 
-    // Adicionar a nova música ao array meusAlbuns
     meusAlbuns.push(novaMusica);
 
-    // Salvar as músicas atualizadas no localStorage
     localStorage.setItem('meusAlbuns', JSON.stringify(meusAlbuns));
 
-    // Atualizar a lista de álbuns na página
     atualizaListaDeAlbuns();
 
-    // Limpar o formulário após adicionar a música
     document.getElementById('musicForm').reset();
   };
   
-  // Ler o arquivo de imagem como uma URL de dados
   reader.readAsDataURL(foto);
 });
 
-// Função para carregar as músicas do localStorage
 function carregarMusicas() {
-  // Verifica se há músicas salvas no localStorage
   const musicasSalvas = localStorage.getItem('meusAlbuns');
-  // Se houver músicas salvas, desserializa a string JSON para recuperar o array original
   if (musicasSalvas) {
     return JSON.parse(musicasSalvas);
   } else {
@@ -127,7 +113,6 @@ function carregarMusicas() {
   }
 }
 
-// Carregar as músicas salvas do localStorage quando a página for carregada
 document.addEventListener('DOMContentLoaded', function () {
   meusAlbuns.push(...carregarMusicas());
   atualizaListaDeAlbuns();
