@@ -1,4 +1,4 @@
-const meusAlbuns = [];
+let meusAlbuns = [];
 
 function organizaEmLinhasEColunas(albuns) {
   const numeroDeColunas = 3;
@@ -142,6 +142,13 @@ function atualizaListaDeAlbuns() {
 
     }
 
-
   listaDeAlbuns.replaceWith(criaListaDeAlbuns(organizaEmLinhasEColunas(meusAlbuns)))
 }
+
+window.addEventListener("storage", function() {
+  //console.log("Teste");
+  carregarMusicas();
+  meusAlbuns = carregarMusicas();
+  const listaDeAlbuns = document.getElementById("album-list");
+  listaDeAlbuns.replaceWith(criaListaDeAlbuns(organizaEmLinhasEColunas(meusAlbuns)))
+});
