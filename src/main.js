@@ -30,10 +30,35 @@ function criaCardHtmlParaAlbum(album, index) {
     <div class="card-body">
       <h5 class="card-title">${album.nome_do_album}</h5>
       <p class="card-text">${album.nome_da_banda} - <b>${album.ano_do_album}<br> <a href=${album.Link} target="blank_">Spotify</a></b></p>
+      <button type="button" class="btn btn-secondary btn-lista-musicas"  data-bs-toggle="modal" data-bs-target="#listaMusicasModal" onclick="atualizarListaMusicas('${encodeURI(album.nome_do_album).replace(/\'/gm,"%27")}')">Lista de músicas</button>
       <button class="btn btn-danger btn-sm delete-btn" data-index="${index}">Excluir</button>
       </div>
   </div>
   `;
+}
+
+function criaListaHTMLParaAlbum(musicas) {
+  return musicas.map((musica) => {
+    return `<li class="item-lista-musica list-group-item">
+      ${musica.numero_da_faixa} - ${musica.nome} <br>
+      <audio controls src="${musica.media_url}" type="audio/ogg" class="audio-musica"></audio>
+    </li>`
+  }).join("\n");
+}
+
+function pegarDadosAPI(nome_do_album) {
+  return fetch(`https://api.gvillalta.com/albums/${encodeURIComponent(nome_do_album)}`)
+}
+
+async function atualizarListaMusicas(nome_do_album) {
+  let musicas = await pegarDadosAPI(nome_do_album).then(response => response.json());
+
+  const titulo_musicas = document.getElementById("titulo_lista_musicas");
+  titulo_musicas.innerHTML = `${decodeURI(nome_do_album).replace('%27', '\'')}`
+
+  const lista_musicas = document.getElementById("lista_musicas");
+  lista_musicas.innerHTML = criaListaHTMLParaAlbum(musicas);
+  
 }
 
 function criaLinhaDeAlbuns(uma_linha) {
